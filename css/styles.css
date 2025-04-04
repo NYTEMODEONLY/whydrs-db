@@ -661,16 +661,6 @@ nav ul li a:focus::after {
     position: relative;
     overflow: hidden;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.hero .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 .hero-content {
@@ -682,7 +672,6 @@ nav ul li a:focus::after {
     margin: 0 auto;
     position: relative;
     z-index: 2;
-    width: 100%;
 }
 
 .hero h1 {
@@ -701,7 +690,7 @@ nav ul li a:focus::after {
     hyphens: auto;
 }
 
-.hero .subtitle {
+.subtitle {
     font-size: 1.3rem;
     font-weight: 400;
     margin-bottom: 1rem;
@@ -714,40 +703,27 @@ nav ul li a:focus::after {
 @media (max-width: 768px) {
     .hero {
         padding: var(--spacing-lg) 0;
-        align-items: center;
-    }
-
-    .hero .container {
-        width: 100%;
-        display: flex;
-        align-items: center;
     }
 
     .hero h1 {
         font-size: 2rem;
         padding: 0 0.5rem;
         margin-bottom: 0.8rem;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
     }
 
     .subtitle {
         font-size: 1.1rem;
         padding: 0 0.8rem;
-        text-align: center;
     }
     
     .hero-explainer {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
         padding: 0.7rem 1rem;
-        width: 90%;
     }
     
     .hero-explainer p {
         font-size: 1rem;
-        text-align: center;
     }
 }
 
@@ -825,10 +801,21 @@ nav ul li a:focus::after {
     max-width: 700px;
 }
 
+/* CTA Buttons */
+.cta-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    justify-content: center;
+    width: 100%;
+    max-width: 700px;
+}
+
 .cta-buttons .button {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
     padding: 0.6rem 1rem;
     min-width: 140px;
@@ -889,8 +876,6 @@ nav ul li a:focus::after {
 .stat {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
 }
 
 .stat-number {
@@ -977,12 +962,31 @@ nav ul li a:focus::after {
 
 @media (max-width: 768px) {
     .scroll-indicator {
-        bottom: 25px;
+        bottom: 15px;
+        padding: 6px 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
     }
     
     .scroll-indicator svg {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
+        margin: 0 auto;
+    }
+    
+    .about h2 {
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* Center the View Main Site button */
+    .about .button {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        max-width: 200px;
     }
 }
 
@@ -1205,6 +1209,10 @@ nav ul li a:focus::after {
 .about {
     background-color: var(--background-grey);
     padding: var(--spacing-xl) 0;
+}
+
+.about h2 {
+    text-align: center;
 }
 
 .about-content {
