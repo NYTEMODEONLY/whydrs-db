@@ -150,11 +150,45 @@
 }
 
 .data-table tbody td {
-    white-space: normal;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 0.85rem;
     min-height: 2.2rem;
     vertical-align: middle;
+}
+
+/* Clickable cells */
+.data-table td.clickable-cell {
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+    user-select: all;
+}
+
+.data-table td.clickable-cell:hover {
+    background-color: rgba(13, 71, 161, 0.1);
+}
+
+.data-table td.clickable-cell:hover::after {
+    content: "Click to copy";
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 20;
+    opacity: 0.9;
+}
+
+.data-table td.copy-success::after {
+    content: "Copied!" !important;
+    background-color: var(--success-color, #4CAF50) !important;
 }
 
 /* Sortable headers */

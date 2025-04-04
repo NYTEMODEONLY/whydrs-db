@@ -291,11 +291,64 @@ function renderTable() {
         visibleColumns.forEach(column => {
             const cell = document.createElement('td');
             cell.textContent = item[column] || '';
+            
+            // Make email and phone number cells clickable for copy functionality
+            if ((column === 'IR_Emails' || column === 'IR_Phone_Number') && item[column]) {
+                cell.className = 'clickable-cell';
+                cell.setAttribute('data-copy', item[column]);
+                cell.addEventListener('click', handleCellClick);
+            }
+            
             row.appendChild(cell);
         });
         
         tableBody.appendChild(row);
     });
+}
+
+// Handle click on a cell to copy content
+function handleCellClick(event) {
+    const cell = event.currentTarget;
+    const textToCopy = cell.getAttribute('data-copy');
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+            // Show success visual feedback
+            cell.classList.add('copy-success');
+            
+            // Remove the success class after a brief moment
+            setTimeout(() => {
+                cell.classList.remove('copy-success');
+            }, 1500);
+        })
+        .catch(err => {
+            console.error('Could not copy text: ', err);
+            
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                // Show success visual feedback
+                cell.classList.add('copy-success');
+                
+                // Remove the success class after a brief moment
+                setTimeout(() => {
+                    cell.classList.remove('copy-success');
+                }, 1500);
+            } catch (err) {
+                console.error('Fallback: Could not copy text: ', err);
+                alert('Could not copy text. Please try selecting and copying manually.');
+            }
+            
+            document.body.removeChild(textArea);
+        });
 }
 
 // Show column selector modal
