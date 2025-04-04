@@ -150,83 +150,59 @@
 }
 
 .data-table tbody td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
     font-size: 0.85rem;
     min-height: 2.2rem;
     vertical-align: middle;
 }
 
-/* Clickable cells */
-.data-table td.clickable-cell {
+/* Email and Phone cells - Click to copy */
+.data-table td.copyable-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    user-select: all;
     position: relative;
+    transition: background-color 0.2s ease;
 }
 
-.data-table td.clickable-cell:hover {
+.data-table td.copyable-cell:hover {
     background-color: rgba(13, 71, 161, 0.1);
 }
 
-/* New tooltip implementation */
-.data-table td.clickable-cell .tooltip {
-    visibility: hidden;
-    width: max-content;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: white;
-    text-align: center;
-    padding: 5px 10px;
-    border-radius: 4px;
+.data-table td.copyable-cell:hover::after {
+    content: "Click to copy";
     position: absolute;
-    z-index: 200;
-    bottom: 125%;
+    bottom: -25px;
     left: 50%;
     transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
     font-size: 0.75rem;
+    z-index: 20;
+    white-space: nowrap;
 }
 
-/* Tooltip arrow */
-.data-table td.clickable-cell .tooltip::after {
-    content: "";
+.data-table td.copy-success {
+    background-color: rgba(76, 175, 80, 0.1) !important;
+}
+
+.data-table td.copy-success::after {
+    content: "Copied!" !important;
     position: absolute;
-    top: 100%;
+    bottom: -25px;
     left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
-}
-
-/* Show the tooltip when hovering over the cell */
-.data-table td.clickable-cell:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Success tooltip */
-.data-table td.clickable-cell .success-tooltip {
-    background-color: var(--success-color, #4CAF50);
-    visibility: hidden;
-    opacity: 0;
-}
-
-.data-table td.clickable-cell .success-tooltip::after {
-    border-color: var(--success-color, #4CAF50) transparent transparent transparent;
-}
-
-/* Show success tooltip when copied */
-.data-table td.copy-success .success-tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-.data-table td.copy-success .tooltip {
-    visibility: hidden;
-    opacity: 0;
+    transform: translateX(-50%);
+    background-color: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    z-index: 20;
+    white-space: nowrap;
 }
 
 /* Sortable headers */

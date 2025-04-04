@@ -288,28 +288,17 @@ function renderTable() {
     pageData.forEach(item => {
         const row = document.createElement('tr');
         
-        visibleColumns.forEach(column => {
+        visibleColumns.forEach((column, index) => {
             const cell = document.createElement('td');
             cell.textContent = item[column] || '';
             
-            // Make email and phone number cells clickable for copy functionality
-            if ((column === 'IR_Emails' || column === 'IR_Phone_Number') && item[column]) {
-                cell.className = 'clickable-cell';
-                cell.setAttribute('data-copy', item[column]);
-                
-                // Add tooltip elements
-                const tooltip = document.createElement('span');
-                tooltip.className = 'tooltip';
-                tooltip.textContent = 'Click to copy';
-                
-                const successTooltip = document.createElement('span');
-                successTooltip.className = 'tooltip success-tooltip';
-                successTooltip.textContent = 'Copied!';
-                
-                cell.appendChild(tooltip);
-                cell.appendChild(successTooltip);
-                
-                cell.addEventListener('click', handleCellClick);
+            // Make email and phone number cells copyable
+            if (column === 'IR_Emails' || column === 'IR_Phone_Number') {
+                if (item[column]) {
+                    cell.classList.add('copyable-cell');
+                    cell.setAttribute('data-copy', item[column]);
+                    cell.addEventListener('click', handleCopyClick);
+                }
             }
             
             row.appendChild(cell);
@@ -319,49 +308,61 @@ function renderTable() {
     });
 }
 
-// Handle click on a cell to copy content
-function handleCellClick(event) {
-    const cell = event.currentTarget;
-    const textToCopy = cell.getAttribute('data-copy');
+// Copy to clipboard functionality
+function handleCopyClick(e) {
+    const text = e.target.getAttribute('data-copy');
+    const cell = e.target;
     
-    // Copy to clipboard
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            // Show success visual feedback
-            cell.classList.add('copy-success');
-            
-            // Remove the success class after a brief moment
-            setTimeout(() => {
-                cell.classList.remove('copy-success');
-            }, 1500);
-        })
-        .catch(err => {
-            console.error('Could not copy text: ', err);
-            
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = textToCopy;
-            textArea.style.position = 'fixed';
-            textArea.style.opacity = '0';
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                // Show success visual feedback
-                cell.classList.add('copy-success');
-                
-                // Remove the success class after a brief moment
-                setTimeout(() => {
-                    cell.classList.remove('copy-success');
-                }, 1500);
-            } catch (err) {
-                console.error('Fallback: Could not copy text: ', err);
-                alert('Could not copy text. Please try selecting and copying manually.');
-            }
-            
-            document.body.removeChild(textArea);
-        });
+    // Use the modern Clipboard API with fallback to execCommand
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                showCopySuccess(cell);
+            })
+            .catch(err => {
+                console.error('Could not copy text: ', err);
+                fallbackCopy(text, cell);
+            });
+    } else {
+        fallbackCopy(text, cell);
+    }
+}
+
+// Fallback copy method for older browsers
+function fallbackCopy(text, cell) {
+    // Create a temporary input element
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px';
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    
+    try {
+        // Copy the text
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopySuccess(cell);
+        } else {
+            console.error('Fallback copy was unsuccessful');
+        }
+    } catch (err) {
+        console.error('Fallback copy error: ', err);
+    }
+    
+    // Remove the temporary element
+    document.body.removeChild(tempInput);
+}
+
+// Show copy success visual feedback
+function showCopySuccess(cell) {
+    // Visual feedback
+    cell.classList.add('copy-success');
+    
+    // Remove the success class after a delay
+    setTimeout(() => {
+        cell.classList.remove('copy-success');
+    }, 1500);
 }
 
 // Show column selector modal
