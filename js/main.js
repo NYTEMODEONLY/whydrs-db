@@ -403,17 +403,17 @@ function initializeAutocomplete(inputElement, type) {
         document.querySelectorAll('.autocomplete-backdrop').forEach(el => {
             el.style.display = 'none';
         });
-        
-        // Remove any focus from input elements
-        document.activeElement.blur();
     }
     
     // Focus event to show suggestions if input has content
-    inputElement.addEventListener('focus', function() {
+    inputElement.addEventListener('focus', function(e) {
         const query = this.value.trim();
         if (query && databaseData.length) {
             // Trigger input event to show suggestions
-            this.dispatchEvent(new Event('input'));
+            // Use a slight delay to prevent focus issues
+            setTimeout(() => {
+                this.dispatchEvent(new Event('input'));
+            }, 10);
         }
     });
     
@@ -443,11 +443,15 @@ function initializeAutocomplete(inputElement, type) {
     
     // Global document click handler to close dropdown
     document.addEventListener('click', function(event) {
-        if (event.target !== inputElement && 
-            !autocompleteContainer.contains(event.target) && 
-            event.target !== backdrop) {
-            hideAutocomplete();
+        // Don't do anything if clicking on the input or inside autocomplete
+        if (event.target === inputElement || 
+            autocompleteContainer.contains(event.target) || 
+            event.target === backdrop) {
+            return;
         }
+        
+        // Otherwise, hide the autocomplete
+        hideAutocomplete();
     });
 }
 
