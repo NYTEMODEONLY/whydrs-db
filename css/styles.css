@@ -964,15 +964,24 @@ nav ul li a:focus::after {
     .scroll-indicator {
         bottom: 15px;
         padding: 6px 10px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         text-align: center;
+        width: 40px;
+        right: auto;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     
     .scroll-indicator svg {
         width: 20px;
         height: 20px;
         margin: 0 auto;
+        display: block;
     }
     
     .about h2 {
