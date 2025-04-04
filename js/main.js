@@ -289,44 +289,61 @@ function initializeAutocomplete(inputElement, type) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                inputElement.value = tickerDisplay || companyDisplay;
-                hideAutocomplete();
-                inputElement.focus(); // Keep focus on the input
+                // Store the selection value before hiding the dropdown
+                const selectedValue = tickerDisplay || companyDisplay;
                 
-                // If it's hero search, sync with main search
-                if (type === 'hero') {
-                    const databaseSection = document.querySelector('#database');
-                    
-                    if (databaseSection) {
-                        // Get header height to use as offset
-                        const headerHeight = document.querySelector('header').offsetHeight;
-                        // Add extra padding (20px) for visual comfort
-                        const scrollOffset = headerHeight + 20;
+                // Immediately hide the dropdown before doing anything else
+                hideAutocomplete();
+                
+                // Set the input value
+                inputElement.value = selectedValue;
+                
+                // Set a flag to prevent the dropdown from reappearing due to focus events
+                inputElement.setAttribute('data-just-selected', 'true');
+                
+                // Use setTimeout to allow the DOM to update before proceeding
+                setTimeout(() => {
+                    // If it's hero search, sync with main search
+                    if (type === 'hero') {
+                        const databaseSection = document.querySelector('#database');
                         
-                        // Calculate the element's position and apply offset
-                        const elementPosition = databaseSection.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - scrollOffset;
+                        if (databaseSection) {
+                            // Get header height to use as offset
+                            const headerHeight = document.querySelector('header').offsetHeight;
+                            // Add extra padding (20px) for visual comfort
+                            const scrollOffset = headerHeight + 20;
+                            
+                            // Calculate the element's position and apply offset
+                            const elementPosition = databaseSection.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - scrollOffset;
+                            
+                            // Scroll to the adjusted position
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: "smooth"
+                            });
+                            
+                            // Set the main search input value
+                            searchInput.value = selectedValue;
+                            
+                            // Wait for scroll to complete then search
+                            setTimeout(() => {
+                                // Use exact match search when selecting from dropdown
+                                searchDatabase(selectedValue, true);
+                                
+                                // Clear the flag after search is complete
+                                inputElement.removeAttribute('data-just-selected');
+                            }, 500);
+                        }
+                    } else {
+                        // Main search - execute search directly with exact match
+                        searchDatabase(selectedValue, true);
+                        resultsContainer.scrollIntoView({ behavior: 'smooth' });
                         
-                        // Scroll to the adjusted position
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: "smooth"
-                        });
-                        
-                        // Set the main search input value
-                        searchInput.value = tickerDisplay || companyDisplay;
-                        
-                        // Wait for scroll to complete then search
-                        setTimeout(() => {
-                            // Use exact match search when selecting from dropdown
-                            searchDatabase(tickerDisplay || companyDisplay, true);
-                        }, 500);
+                        // Clear the flag after search is complete
+                        inputElement.removeAttribute('data-just-selected');
                     }
-                } else {
-                    // Main search - execute search directly with exact match
-                    searchDatabase(tickerDisplay || companyDisplay, true);
-                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
-                }
+                }, 50); // Small delay to ensure DOM updates
             });
             
             autocompleteContainer.appendChild(suggestionItem);
@@ -395,18 +412,24 @@ function initializeAutocomplete(inputElement, type) {
     
     // Helper function to hide autocomplete
     function hideAutocomplete() {
-        autocompleteContainer.style.display = 'none';
-        backdrop.style.display = 'none';
+        // Set display: none with !important to force hiding
+        autocompleteContainer.style.cssText = 'display: none !important;';
+        backdrop.style.cssText = 'display: none !important;';
         currentFocus = -1;
         
-        // Hide all backdrops on the page for good measure
-        document.querySelectorAll('.autocomplete-backdrop').forEach(el => {
-            el.style.display = 'none';
+        // Hide all backdrops and autocomplete containers on the page for good measure
+        document.querySelectorAll('.autocomplete-backdrop, .autocomplete-container').forEach(el => {
+            el.style.cssText = 'display: none !important;';
         });
     }
     
     // Focus event to show suggestions if input has content
     inputElement.addEventListener('focus', function(e) {
+        // Check if we just selected an item - if so, don't show dropdown again
+        if (this.hasAttribute('data-just-selected')) {
+            return;
+        }
+        
         const query = this.value.trim();
         if (query && databaseData.length) {
             // Trigger input event to show suggestions
