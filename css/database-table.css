@@ -80,48 +80,18 @@
 
 .data-table {
     width: 100%;
-    min-width: 900px;
+    min-width: 800px;
     border-collapse: collapse;
     border-spacing: 0;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     table-layout: fixed;
 }
 
 .data-table th, 
 .data-table td {
-    padding: 0.75rem 1rem;
+    padding: 0.65rem 0.75rem;
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    position: relative;
-}
-
-/* Add tooltip capability to table cells */
-.data-table td {
-    cursor: default;
-}
-
-.data-table td:hover::after {
-    content: attr(title);
-    position: absolute;
-    left: 0;
-    top: -30px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.data-table td[title]:hover::after {
-    opacity: 1;
 }
 
 .data-table th {
@@ -135,9 +105,12 @@
     height: 3.5rem;
     vertical-align: middle;
     line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* Column widths - adjusted for better data display */
+/* Column widths */
 .data-table th[data-column="Ticker"],
 .data-table td:nth-child(1) {
     width: 8%;
@@ -150,22 +123,22 @@
 
 .data-table th[data-column="Company_Name_Issuer"],
 .data-table td:nth-child(3) {
-    width: 26%;
+    width: 27%;
 }
 
 .data-table th[data-column="Transfer_Agent"],
 .data-table td:nth-child(4) {
-    width: 22%;
+    width: 27%;
 }
 
 .data-table th[data-column="IR_Emails"],
 .data-table td:nth-child(5) {
-    width: 22%;
+    width: 18%;
 }
 
 .data-table th[data-column="IR_Phone_Number"],
 .data-table td:nth-child(6) {
-    width: 12%;
+    width: 10%;
 }
 
 .data-table tbody tr:nth-child(even) {
@@ -177,9 +150,11 @@
 }
 
 .data-table tbody td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    font-size: 0.85rem;
+    min-height: 2.2rem;
+    vertical-align: middle;
 }
 
 /* Sortable headers */

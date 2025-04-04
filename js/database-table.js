@@ -290,14 +290,7 @@ function renderTable() {
         
         visibleColumns.forEach(column => {
             const cell = document.createElement('td');
-            const cellContent = item[column] || '';
-            cell.textContent = cellContent;
-            
-            // Add title attribute for tooltip if content might be truncated
-            if (cellContent.length > 15) {
-                cell.setAttribute('title', cellContent);
-            }
-            
+            cell.textContent = item[column] || '';
             row.appendChild(cell);
         });
         
