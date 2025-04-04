@@ -424,13 +424,18 @@ function updateTableHeaders() {
         th.className = 'sortable';
         th.setAttribute('data-column', column);
         
+        // Create a wrapper for the column name to ensure consistent alignment
+        const columnNameSpan = document.createElement('span');
+        columnNameSpan.className = 'column-name';
+        columnNameSpan.textContent = formatColumnName(column);
+        
         const sortIcon = document.createElement('span');
         sortIcon.className = 'sort-icon';
         if (column === currentSort.column) {
             sortIcon.textContent = currentSort.direction === 'asc' ? '▲' : '▼';
         }
         
-        th.textContent = formatColumnName(column) + ' ';
+        th.appendChild(columnNameSpan);
         th.appendChild(sortIcon);
         
         th.addEventListener('click', function() {
