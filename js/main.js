@@ -117,6 +117,17 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const query = searchInput.value.trim().toUpperCase();
             if (query) {
+                // Hide any open autocomplete
+                if (mainAutocompleteContainer) {
+                    mainAutocompleteContainer.style.display = 'none';
+                }
+                
+                // Hide any backdrop elements
+                const backdrops = document.querySelectorAll('.autocomplete-backdrop');
+                backdrops.forEach(backdrop => {
+                    backdrop.style.display = 'none';
+                });
+                
                 searchDatabase(query);
                 // Scroll to results
                 resultsContainer.scrollIntoView({ behavior: 'smooth' });
@@ -130,6 +141,17 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const query = heroSearchInput.value.trim().toUpperCase();
             if (query) {
+                // Hide any open autocomplete
+                if (heroAutocompleteContainer) {
+                    heroAutocompleteContainer.style.display = 'none';
+                }
+                
+                // Hide any backdrop elements
+                const backdrops = document.querySelectorAll('.autocomplete-backdrop');
+                backdrops.forEach(backdrop => {
+                    backdrop.style.display = 'none';
+                });
+                
                 // Get the database section element
                 const databaseSection = document.querySelector('#database');
                 
@@ -296,12 +318,13 @@ function initializeAutocomplete(inputElement, type) {
                         
                         // Wait for scroll to complete then search
                         setTimeout(() => {
-                            searchDatabase(tickerDisplay || companyDisplay);
+                            // Use exact match search when selecting from dropdown
+                            searchDatabase(tickerDisplay || companyDisplay, true);
                         }, 500);
                     }
                 } else {
-                    // Main search - execute search directly
-                    searchDatabase(tickerDisplay || companyDisplay);
+                    // Main search - execute search directly with exact match
+                    searchDatabase(tickerDisplay || companyDisplay, true);
                     resultsContainer.scrollIntoView({ behavior: 'smooth' });
                 }
             });
@@ -375,6 +398,11 @@ function initializeAutocomplete(inputElement, type) {
         autocompleteContainer.style.display = 'none';
         backdrop.style.display = 'none';
         currentFocus = -1;
+        
+        // Also hide any other backdrops that might be visible
+        document.querySelectorAll('.autocomplete-backdrop').forEach(el => {
+            el.style.display = 'none';
+        });
     }
     
     // Focus event to show suggestions if input has content
@@ -466,7 +494,7 @@ function tryFetchPath(paths, index) {
 }
 
 // Search the database
-function searchDatabase(query) {
+function searchDatabase(query, exactMatchOnly = false) {
     // Clear previous results
     resultsContainer.innerHTML = '';
     
@@ -477,10 +505,27 @@ function searchDatabase(query) {
     
     // Filter results
     const upperQuery = query.toUpperCase();
-    const results = databaseData.filter(item => 
-        (item.Ticker && item.Ticker.toUpperCase() === upperQuery) || 
-        (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase().includes(upperQuery))
-    );
+    let results;
+    
+    if (exactMatchOnly) {
+        // Only match exact ticker
+        results = databaseData.filter(item => 
+            (item.Ticker && item.Ticker.toUpperCase() === upperQuery)
+        );
+        
+        // If no results with exact ticker, try exact company name
+        if (results.length === 0) {
+            results = databaseData.filter(item => 
+                (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase() === upperQuery)
+            );
+        }
+    } else {
+        // Regular search (partial matches)
+        results = databaseData.filter(item => 
+            (item.Ticker && item.Ticker.toUpperCase() === upperQuery) || 
+            (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase().includes(upperQuery))
+        );
+    }
     
     if (results.length === 0) {
         resultsContainer.innerHTML = '<div class="search-result"><h3>No results found</h3></div>';
