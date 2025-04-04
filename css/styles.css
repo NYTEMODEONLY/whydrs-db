@@ -672,6 +672,8 @@ nav ul li a:focus::after {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
 }
 
 .hero h1 {
@@ -681,7 +683,6 @@ nav ul li a:focus::after {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     color: white;
     font-style: italic;
-    white-space: nowrap;
 }
 
 .hero-content {
@@ -1060,6 +1061,15 @@ nav ul li a:focus::after {
         padding-bottom: var(--spacing-sm);
     }
     
+    .hero h1 {
+        font-size: 2.8rem;
+        white-space: normal;
+    }
+
+    .hero .subtitle {
+        font-size: 1.2rem;
+    }
+    
     .hero-visual {
         margin-bottom: var(--spacing-md);
     }
@@ -1084,9 +1094,53 @@ nav ul li a:focus::after {
 }
 
 @media (max-width: 768px) {
+    .hero .container {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+    
+    .hero h1 {
+        font-size: 2.2rem;
+        white-space: normal;
+        line-height: 1.2;
+    }
+    
+    .hero .subtitle {
+        font-size: 1rem;
+        max-width: 100%;
+        padding-left: var(--spacing-xs);
+        padding-right: var(--spacing-xs);
+    }
+    
+    .hero-explainer {
+        padding: 0.8rem 1rem;
+        width: 95%;
+    }
+    
+    .hero-explainer p {
+        font-size: 0.95rem;
+    }
+
+    .quick-search {
+        max-width: 95%;
+    }
+    
+    .quick-search input, 
+    .search-container input {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .quick-search .search-button,
+    .search-container .search-button {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
     .cta-buttons {
         flex-direction: column;
         align-items: center;
+        width: 95%;
     }
     
     .cta-buttons .button {
@@ -1098,7 +1152,8 @@ nav ul li a:focus::after {
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
-        margin-bottom: var(--spacing-md); /* Reduced bottom margin on mobile */
+        margin-bottom: var(--spacing-md);
+        width: 95%;
     }
     
     .stat-number {
@@ -1161,6 +1216,42 @@ nav ul li a:focus::after {
         height: 2rem;
         background-color: var(--primary-light);
         transform: translateX(-50%);
+    }
+}
+
+/* Add specific styles for very small screens */
+@media (max-width: 430px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .hero .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .hero-explainer {
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .hero-explainer p {
+        font-size: 0.85rem;
+    }
+    
+    .cta-buttons .button {
+        font-size: 0.8rem;
+        min-width: auto;
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .social-proof {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    
+    .stat {
+        width: 30%;
+        text-align: center;
     }
 }
 
@@ -1346,167 +1437,6 @@ nav ul li a:focus::after {
     
     img {
         max-width: 80%;
-    }
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-    .hero {
-        padding: var(--spacing-md) 0 var(--spacing-lg);
-    }
-    
-    .hero .container {
-        gap: var(--spacing-sm);
-    }
-    
-    .hero-content {
-        padding-bottom: var(--spacing-sm);
-    }
-    
-    .hero-visual {
-        margin-bottom: var(--spacing-md);
-    }
-    
-    .ownership-comparison {
-        max-width: 450px;
-        margin: 0 auto;
-    }
-    
-    .steps-container:before {
-        display: none;
-    }
-    
-    .step {
-        min-width: 220px;
-        padding: 1rem;
-    }
-    
-    .step-content {
-        padding: 1.2rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .cta-buttons .button {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .social-proof {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: var(--spacing-md); /* Reduced bottom margin on mobile */
-    }
-    
-    .stat-number {
-        font-size: 1.1rem;
-    }
-    
-    .stat-label {
-        font-size: 0.75rem;
-    }
-    
-    .scroll-indicator {
-        bottom: 15px;
-        padding: 6px 10px;
-    }
-    
-    .scroll-indicator svg {
-        width: 20px;
-        height: 20px;
-    }
-    
-    .scroll-indicator span {
-        font-size: 0.7rem;
-    }
-    
-    .about-content {
-        flex-direction: column;
-    }
-    
-    .about-image {
-        order: -1;
-        margin-bottom: var(--spacing-md);
-    }
-    
-    .about-image img {
-        max-width: 200px;
-    }
-    
-    .steps-container {
-        flex-direction: column;
-        max-width: 450px;
-        margin: 0 auto;
-    }
-    
-    .steps-container:before {
-        display: none;
-    }
-    
-    .step {
-        width: 100%;
-        margin-bottom: 2rem;
-    }
-    
-    /* Vertical line connecting steps on mobile */
-    .step:not(:last-child):after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        width: 4px;
-        height: 2rem;
-        background-color: var(--primary-light);
-        transform: translateX(-50%);
-    }
-}
-
-/* Small mobile devices */
-@media (max-width: 480px) {
-    :root {
-        --spacing-xs: 4px;
-        --spacing-sm: 8px;
-        --spacing-md: 16px;
-        --spacing-lg: 24px;
-        --spacing-xl: 32px;
-    }
-    
-    .hero h1 {
-        font-size: 1.8rem;
-    }
-    
-    .hero .subtitle {
-        font-size: 0.9rem;
-    }
-    
-    .hero-explainer {
-        font-size: 0.85rem;
-    }
-    
-    section h2 {
-        font-size: 1.5rem;
-    }
-    
-    .button {
-        padding: 0.6rem 1rem;
-    }
-    
-    .social-proof {
-        padding: var(--spacing-sm) 0;
-    }
-    
-    .stat-number {
-        font-size: 1.5rem;
-    }
-    
-    .stat-label {
-        font-size: 0.8rem;
     }
 }
 
@@ -1734,5 +1664,79 @@ nav ul li a:focus::after {
     .autocomplete-item {
         padding: 10px 12px;
         font-size: 0.9rem;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    :root {
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 16px;
+        --spacing-lg: 24px;
+        --spacing-xl: 32px;
+    }
+    
+    section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .button {
+        padding: 0.6rem 1rem;
+    }
+    
+    .social-proof {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* Additional responsive adjustments for other sections */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+    }
+    
+    .about-image {
+        order: -1;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .about-image img {
+        max-width: 200px;
+    }
+    
+    .steps-container {
+        flex-direction: column;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+    
+    .steps-container:before {
+        display: none;
+    }
+    
+    .step {
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+    
+    /* Vertical line connecting steps on mobile */
+    .step:not(:last-child):after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        width: 4px;
+        height: 2rem;
+        background-color: var(--primary-light);
+        transform: translateX(-50%);
     }
 } 
