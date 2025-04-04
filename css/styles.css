@@ -508,7 +508,7 @@ header {
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000000; /* Significantly higher than autocomplete to ensure it's always on top */
     padding: var(--spacing-sm) 0;
     width: 100%;
 }
@@ -1596,7 +1596,7 @@ nav ul li a:focus::after {
 /* Autocomplete styles */
 .autocomplete-container {
     position: absolute;
-    z-index: 999999;
+    z-index: 999900;
     max-height: 300px;
     overflow-y: auto;
     width: 100%;
@@ -1621,7 +1621,7 @@ nav ul li a:focus::after {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 999990;
+    z-index: 999800;
     background-color: rgba(0, 0, 0, 0.1);
     display: none;
 }
@@ -1681,14 +1681,14 @@ nav ul li a:focus::after {
 #hero-search-form {
     position: relative;
     width: 100%;
-    z-index: 10000;
+    z-index: 999500; /* Lower than header, higher than backdrop */
 }
 
 /* Fix for the main search positioning */
 #search-form {
     position: relative;
     width: 100%;
-    z-index: 10000;
+    z-index: 999500; /* Lower than header, higher than backdrop */
 }
 
 /* Ensure the input stays visible above autocomplete */
