@@ -188,6 +188,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize autocomplete functionality
 function initializeAutocomplete(inputElement, type) {
+    // Create backdrop element
+    const backdrop = document.createElement('div');
+    backdrop.className = 'autocomplete-backdrop';
+    document.body.appendChild(backdrop);
+    
     // Create autocomplete container
     const autocompleteContainer = document.createElement('div');
     autocompleteContainer.className = 'autocomplete-container';
@@ -222,6 +227,7 @@ function initializeAutocomplete(inputElement, type) {
         // Hide if query is empty
         if (!query || !databaseData.length) {
             autocompleteContainer.style.display = 'none';
+            backdrop.style.display = 'none';
             return;
         }
         
@@ -235,6 +241,7 @@ function initializeAutocomplete(inputElement, type) {
         // If no suggestions, hide container
         if (suggestions.length === 0) {
             autocompleteContainer.style.display = 'none';
+            backdrop.style.display = 'none';
             return;
         }
         
@@ -242,8 +249,12 @@ function initializeAutocomplete(inputElement, type) {
         const inputRect = inputElement.getBoundingClientRect();
         autocompleteContainer.style.minWidth = inputRect.width + 'px';
         
-        // Show container
+        // Show backdrop and container
+        backdrop.style.display = 'block';
         autocompleteContainer.style.display = 'block';
+        
+        // Force repaint to ensure proper rendering
+        autocompleteContainer.offsetHeight;
         
         // Create suggestion items
         suggestions.forEach((company, index) => {
@@ -265,6 +276,7 @@ function initializeAutocomplete(inputElement, type) {
                 
                 inputElement.value = tickerDisplay || companyDisplay;
                 autocompleteContainer.style.display = 'none';
+                backdrop.style.display = 'none';
                 inputElement.focus(); // Keep focus on the input
                 
                 // If it's hero search, sync with main search
@@ -347,6 +359,7 @@ function initializeAutocomplete(inputElement, type) {
         // Escape key
         else if (e.key === 'Escape') {
             autocompleteContainer.style.display = 'none';
+            backdrop.style.display = 'none';
             currentFocus = -1;
         }
     });
@@ -373,6 +386,22 @@ function initializeAutocomplete(inputElement, type) {
         if (query && databaseData.length) {
             // Trigger input event to show suggestions
             this.dispatchEvent(new Event('input'));
+        }
+    });
+    
+    // Click on backdrop should close the autocomplete
+    backdrop.addEventListener('click', function() {
+        autocompleteContainer.style.display = 'none';
+        backdrop.style.display = 'none';
+        currentFocus = -1;
+    });
+    
+    // Update document click handler for this specific autocomplete
+    document.addEventListener('click', function(event) {
+        // If click is outside autocomplete and not on the input
+        if (!autocompleteContainer.contains(event.target) && event.target !== inputElement) {
+            autocompleteContainer.style.display = 'none';
+            backdrop.style.display = 'none';
         }
     });
 }

@@ -1596,19 +1596,34 @@ nav ul li a:focus::after {
 /* Autocomplete styles */
 .autocomplete-container {
     position: absolute;
-    z-index: 9999; /* Increased z-index */
+    z-index: 9999;
     max-height: 300px;
     overflow-y: auto;
     width: 100%;
-    background-color: #ffffff; /* Solid background color */
+    background-color: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-    box-shadow: var(--shadow-lg);
-    top: 100%; /* Position below the input */
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.25);
+    top: 100%;
     left: 0;
     right: 0;
     overflow-x: hidden;
     margin-top: 2px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Create a backdrop for the autocomplete container */
+.autocomplete-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9990;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
 .autocomplete-item {
@@ -1625,8 +1640,10 @@ nav ul li a:focus::after {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--text-dark); /* Explicit dark text color */
-    background-color: #ffffff; /* Solid background */
+    color: var(--text-dark);
+    background-color: #ffffff;
+    position: relative;
+    z-index: 1;
 }
 
 .autocomplete-item:hover {
@@ -1664,18 +1681,20 @@ nav ul li a:focus::after {
 #hero-search-form {
     position: relative;
     width: 100%;
+    z-index: 10000;
 }
 
 /* Fix for the main search positioning */
 #search-form {
     position: relative;
     width: 100%;
+    z-index: 10000;
 }
 
 /* Ensure the input stays visible above autocomplete */
 #search-input, #hero-search {
     position: relative;
-    z-index: 1; /* Lower than the dropdown, but still above other page content */
+    z-index: 1;
     background-color: #ffffff;
 }
 
