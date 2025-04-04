@@ -661,6 +661,9 @@ nav ul li a:focus::after {
     position: relative;
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hero-content {
@@ -690,7 +693,7 @@ nav ul li a:focus::after {
     hyphens: auto;
 }
 
-.subtitle {
+.hero .subtitle {
     font-size: 1.3rem;
     font-weight: 400;
     margin-bottom: 1rem;
@@ -703,27 +706,36 @@ nav ul li a:focus::after {
 @media (max-width: 768px) {
     .hero {
         padding: var(--spacing-lg) 0;
+        align-items: center;
     }
 
     .hero h1 {
         font-size: 2rem;
         padding: 0 0.5rem;
         margin-bottom: 0.8rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .subtitle {
         font-size: 1.1rem;
         padding: 0 0.8rem;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .hero-explainer {
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
+        margin-left: auto;
+        margin-right: auto;
         padding: 0.7rem 1rem;
     }
     
     .hero-explainer p {
         font-size: 1rem;
+    }
+    
+    .scroll-indicator {
+        bottom: 20px;
     }
 }
 
@@ -1756,94 +1768,5 @@ nav ul li a:focus::after {
     .autocomplete-item {
         padding: 10px 12px;
         font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 768px) {
-    /* Ensure section titles are centered */
-    section h2, 
-    section h3,
-    .database-heading,
-    .contribute-heading,
-    .about-heading {
-        text-align: center;
-        width: 100%;
-    }
-    
-    /* Center database section elements */
-    .database {
-        text-align: center;
-    }
-    
-    .database p {
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .database-features .feature {
-        text-align: center;
-    }
-    
-    .database-access {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    /* Make all buttons centered on mobile */
-    .button {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    /* Fix scroll indicator positioning */
-    .scroll-indicator {
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        text-align: center;
-    }
-    
-    /* Ensure "How DRS Works" section title is centered */
-    .how-it-works h2 {
-        text-align: center;
-        width: 100%;
-    }
-    
-    /* Center about section content */
-    .about-content {
-        align-items: center;
-        text-align: center;
-    }
-    
-    .about-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .about-text p {
-        text-align: center;
-    }
-    
-    /* Center contribute section elements */
-    .contribute {
-        text-align: center;
-    }
-    
-    .contribution-method {
-        text-align: center;
-    }
-    
-    /* Make sure all form elements are properly centered */
-    .quick-search form,
-    .search-container form {
-        margin-left: auto;
-        margin-right: auto;
     }
 } 
