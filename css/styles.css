@@ -666,6 +666,13 @@ nav ul li a:focus::after {
     align-items: center;
 }
 
+.hero .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .hero-content {
     display: flex;
     flex-direction: column;
@@ -675,6 +682,7 @@ nav ul li a:focus::after {
     margin: 0 auto;
     position: relative;
     z-index: 2;
+    width: 100%;
 }
 
 .hero h1 {
@@ -709,10 +717,17 @@ nav ul li a:focus::after {
         align-items: center;
     }
 
+    .hero .container {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
     .hero h1 {
         font-size: 2rem;
         padding: 0 0.5rem;
         margin-bottom: 0.8rem;
+        text-align: center;
         margin-left: auto;
         margin-right: auto;
     }
@@ -720,22 +735,19 @@ nav ul li a:focus::after {
     .subtitle {
         font-size: 1.1rem;
         padding: 0 0.8rem;
-        margin-left: auto;
-        margin-right: auto;
+        text-align: center;
     }
     
     .hero-explainer {
         margin-left: auto;
         margin-right: auto;
         padding: 0.7rem 1rem;
+        width: 90%;
     }
     
     .hero-explainer p {
         font-size: 1rem;
-    }
-    
-    .scroll-indicator {
-        bottom: 20px;
+        text-align: center;
     }
 }
 
@@ -813,21 +825,10 @@ nav ul li a:focus::after {
     max-width: 700px;
 }
 
-/* CTA Buttons */
-.cta-buttons {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-    margin-bottom: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
-    justify-content: center;
-    width: 100%;
-    max-width: 700px;
-}
-
 .cta-buttons .button {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     padding: 0.6rem 1rem;
     min-width: 140px;
@@ -888,6 +889,8 @@ nav ul li a:focus::after {
 .stat {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .stat-number {
