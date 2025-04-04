@@ -1622,7 +1622,7 @@ nav ul li a:focus::after {
     right: 0;
     bottom: 0;
     z-index: 999800;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: transparent; /* Make fully transparent so there's no dimming effect */
     display: none;
 }
 

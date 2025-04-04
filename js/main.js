@@ -399,10 +399,13 @@ function initializeAutocomplete(inputElement, type) {
         backdrop.style.display = 'none';
         currentFocus = -1;
         
-        // Also hide any other backdrops that might be visible
+        // Hide all backdrops on the page for good measure
         document.querySelectorAll('.autocomplete-backdrop').forEach(el => {
             el.style.display = 'none';
         });
+        
+        // Remove any focus from input elements
+        document.activeElement.blur();
     }
     
     // Focus event to show suggestions if input has content
