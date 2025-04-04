@@ -290,7 +290,14 @@ function renderTable() {
         
         visibleColumns.forEach(column => {
             const cell = document.createElement('td');
-            cell.textContent = item[column] || '';
+            const cellContent = item[column] || '';
+            cell.textContent = cellContent;
+            
+            // Add title attribute for tooltip if content might be truncated
+            if (cellContent.length > 15) {
+                cell.setAttribute('title', cellContent);
+            }
+            
             row.appendChild(cell);
         });
         
@@ -424,18 +431,13 @@ function updateTableHeaders() {
         th.className = 'sortable';
         th.setAttribute('data-column', column);
         
-        // Create a wrapper for the column name to ensure consistent alignment
-        const columnNameSpan = document.createElement('span');
-        columnNameSpan.className = 'column-name';
-        columnNameSpan.textContent = formatColumnName(column);
-        
         const sortIcon = document.createElement('span');
         sortIcon.className = 'sort-icon';
         if (column === currentSort.column) {
             sortIcon.textContent = currentSort.direction === 'asc' ? '▲' : '▼';
         }
         
-        th.appendChild(columnNameSpan);
+        th.textContent = formatColumnName(column) + ' ';
         th.appendChild(sortIcon);
         
         th.addEventListener('click', function() {

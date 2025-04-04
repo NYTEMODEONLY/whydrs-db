@@ -80,9 +80,11 @@
 
 .data-table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
     border-spacing: 0;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
+    table-layout: fixed;
 }
 
 .data-table th, 
@@ -90,7 +92,36 @@
     padding: 0.75rem 1rem;
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+}
+
+/* Add tooltip capability to table cells */
+.data-table td {
+    cursor: default;
+}
+
+.data-table td:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    top: -30px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.data-table td[title]:hover::after {
+    opacity: 1;
 }
 
 .data-table th {
@@ -101,10 +132,40 @@
     top: 0;
     z-index: 10;
     user-select: none;
+    height: 3.5rem;
     vertical-align: middle;
-    height: 50px;
-    box-sizing: border-box;
     line-height: 1.2;
+}
+
+/* Column widths - adjusted for better data display */
+.data-table th[data-column="Ticker"],
+.data-table td:nth-child(1) {
+    width: 8%;
+}
+
+.data-table th[data-column="Exchange"],
+.data-table td:nth-child(2) {
+    width: 10%;
+}
+
+.data-table th[data-column="Company_Name_Issuer"],
+.data-table td:nth-child(3) {
+    width: 26%;
+}
+
+.data-table th[data-column="Transfer_Agent"],
+.data-table td:nth-child(4) {
+    width: 22%;
+}
+
+.data-table th[data-column="IR_Emails"],
+.data-table td:nth-child(5) {
+    width: 22%;
+}
+
+.data-table th[data-column="IR_Phone_Number"],
+.data-table td:nth-child(6) {
+    width: 12%;
 }
 
 .data-table tbody tr:nth-child(even) {
@@ -119,17 +180,14 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 250px;
 }
 
 /* Sortable headers */
 .sortable {
     cursor: pointer;
     transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    justify-content: space-between;
+    position: relative;
+    padding-right: 1.5rem;
 }
 
 .sortable:hover {
@@ -137,20 +195,13 @@
 }
 
 .sort-icon {
-    display: inline-flex;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
     width: 12px;
-    align-items: center;
-    justify-content: center;
-    margin-left: 5px;
+    text-align: center;
     opacity: 0.7;
-}
-
-.column-name {
-    flex: 1;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 /* Loading message */
