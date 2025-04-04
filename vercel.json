@@ -1,4 +1,15 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false
+  "name": "whydrs-database",
+  "version": 2,
+  "public": true,
+  "github": {
+    "enabled": true,
+    "silent": false
+  },
+  "builds": [
+    { "src": "**/*", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
 } 
