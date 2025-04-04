@@ -10,6 +10,10 @@ const heroSearchForm = document.querySelector('#hero-search-form');
 const heroSearchInput = document.querySelector('#hero-search');
 const resultsContainer = document.querySelector('#search-results');
 
+// Autocomplete elements
+let heroAutocompleteContainer = null;
+let mainAutocompleteContainer = null;
+
 // Database data
 let databaseData = [];
 
@@ -50,6 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
             mainNav.classList.remove('active');
             document.body.classList.remove('menu-open');
         }
+        
+        // Close autocomplete dropdowns when clicking outside
+        if (heroAutocompleteContainer && 
+            !heroAutocompleteContainer.contains(event.target) && 
+            event.target !== heroSearchInput) {
+            heroAutocompleteContainer.style.display = 'none';
+        }
+        
+        if (mainAutocompleteContainer && 
+            !mainAutocompleteContainer.contains(event.target) && 
+            event.target !== searchInput) {
+            mainAutocompleteContainer.style.display = 'none';
+        }
     });
 
     // Smooth scroll for all anchor links
@@ -83,6 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load the database
     fetchDatabase();
+
+    // Initialize autocomplete for hero search
+    if (heroSearchInput) {
+        initializeAutocomplete(heroSearchInput, 'hero');
+    }
+    
+    // Initialize autocomplete for main search
+    if (searchInput) {
+        initializeAutocomplete(searchInput, 'main');
+    }
 
     // Main search form submission
     if (searchForm) {
@@ -159,6 +186,197 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Initialize autocomplete functionality
+function initializeAutocomplete(inputElement, type) {
+    // Create autocomplete container
+    const autocompleteContainer = document.createElement('div');
+    autocompleteContainer.className = 'autocomplete-container';
+    
+    // Properly position the autocomplete container
+    const parentForm = inputElement.closest('form');
+    parentForm.style.position = 'relative';
+    
+    // Append the container to the form
+    parentForm.appendChild(autocompleteContainer);
+    
+    // Store reference based on type
+    if (type === 'hero') {
+        heroAutocompleteContainer = autocompleteContainer;
+    } else {
+        mainAutocompleteContainer = autocompleteContainer;
+    }
+    
+    // Hide by default
+    autocompleteContainer.style.display = 'none';
+    
+    // Track current selected item
+    let currentFocus = -1;
+    
+    // Input event listener to show suggestions
+    inputElement.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        // Clear previous results
+        autocompleteContainer.innerHTML = '';
+        
+        // Hide if query is empty
+        if (!query || !databaseData.length) {
+            autocompleteContainer.style.display = 'none';
+            return;
+        }
+        
+        // Get suggestions
+        const upperQuery = query.toUpperCase();
+        const suggestions = databaseData.filter(item => 
+            (item.Ticker && item.Ticker.toUpperCase().startsWith(upperQuery)) || 
+            (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase().includes(upperQuery))
+        ).slice(0, 10); // Limit to 10 results
+        
+        // If no suggestions, hide container
+        if (suggestions.length === 0) {
+            autocompleteContainer.style.display = 'none';
+            return;
+        }
+        
+        // Calculate position to ensure it's below the input
+        const inputRect = inputElement.getBoundingClientRect();
+        autocompleteContainer.style.minWidth = inputRect.width + 'px';
+        
+        // Show container
+        autocompleteContainer.style.display = 'block';
+        
+        // Create suggestion items
+        suggestions.forEach((company, index) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'autocomplete-item';
+            
+            // Display ticker and company name
+            const tickerDisplay = company.Ticker ? company.Ticker : '';
+            const companyDisplay = company.Company_Name_Issuer ? company.Company_Name_Issuer : 'Unnamed Company';
+            
+            suggestionItem.innerHTML = `
+                <strong>${tickerDisplay}</strong> ${tickerDisplay ? '- ' : ''}${companyDisplay}
+            `.trim();
+            
+            // Add click event
+            suggestionItem.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                inputElement.value = tickerDisplay || companyDisplay;
+                autocompleteContainer.style.display = 'none';
+                inputElement.focus(); // Keep focus on the input
+                
+                // If it's hero search, sync with main search
+                if (type === 'hero') {
+                    const databaseSection = document.querySelector('#database');
+                    
+                    if (databaseSection) {
+                        // Get header height to use as offset
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        // Add extra padding (20px) for visual comfort
+                        const scrollOffset = headerHeight + 20;
+                        
+                        // Calculate the element's position and apply offset
+                        const elementPosition = databaseSection.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - scrollOffset;
+                        
+                        // Scroll to the adjusted position
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                        
+                        // Set the main search input value
+                        searchInput.value = tickerDisplay || companyDisplay;
+                        
+                        // Wait for scroll to complete then search
+                        setTimeout(() => {
+                            searchDatabase(tickerDisplay || companyDisplay);
+                        }, 500);
+                    }
+                } else {
+                    // Main search - execute search directly
+                    searchDatabase(tickerDisplay || companyDisplay);
+                    resultsContainer.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            autocompleteContainer.appendChild(suggestionItem);
+        });
+        
+        // Reset current focus
+        currentFocus = -1;
+    });
+    
+    // Keyboard navigation
+    inputElement.addEventListener('keydown', function(e) {
+        const items = autocompleteContainer.querySelectorAll('.autocomplete-item');
+        
+        if (!items.length) return;
+        
+        // Down arrow key
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentFocus++;
+            addActive(items, currentFocus);
+        } 
+        // Up arrow key
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentFocus--;
+            addActive(items, currentFocus);
+        } 
+        // Enter key
+        else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (currentFocus > -1) {
+                // Simulate click on active item
+                if (items[currentFocus]) {
+                    items[currentFocus].click();
+                }
+            } else {
+                // Submit the form
+                if (type === 'hero') {
+                    heroSearchForm.dispatchEvent(new Event('submit'));
+                } else {
+                    searchForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        } 
+        // Escape key
+        else if (e.key === 'Escape') {
+            autocompleteContainer.style.display = 'none';
+            currentFocus = -1;
+        }
+    });
+    
+    // Helper function to manage active items
+    function addActive(items, index) {
+        // Handle out of bounds
+        if (index >= items.length) index = 0;
+        if (index < 0) index = items.length - 1;
+        
+        // Remove active from all items
+        Array.from(items).forEach(item => {
+            item.classList.remove('autocomplete-active');
+        });
+        
+        // Add active class to current focused item
+        items[index].classList.add('autocomplete-active');
+        currentFocus = index;
+    }
+    
+    // Focus event to show suggestions if input has content
+    inputElement.addEventListener('focus', function() {
+        const query = this.value.trim();
+        if (query && databaseData.length) {
+            // Trigger input event to show suggestions
+            this.dispatchEvent(new Event('input'));
+        }
+    });
+}
+
 // Fetch the database
 function fetchDatabase() {
     // Try multiple paths to find the database
@@ -215,9 +433,10 @@ function searchDatabase(query) {
     }
     
     // Filter results
+    const upperQuery = query.toUpperCase();
     const results = databaseData.filter(item => 
-        (item.Ticker && item.Ticker.toUpperCase() === query) || 
-        (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase().includes(query))
+        (item.Ticker && item.Ticker.toUpperCase() === upperQuery) || 
+        (item.Company_Name_Issuer && item.Company_Name_Issuer.toUpperCase().includes(upperQuery))
     );
     
     if (results.length === 0) {
