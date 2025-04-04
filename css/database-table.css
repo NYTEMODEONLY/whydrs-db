@@ -161,77 +161,72 @@
 /* Clickable cells */
 .data-table td.clickable-cell {
     cursor: pointer;
-    position: relative;
     transition: background-color 0.2s ease;
     user-select: all;
+    position: relative;
 }
 
 .data-table td.clickable-cell:hover {
     background-color: rgba(13, 71, 161, 0.1);
 }
 
-/* Tooltip container */
-.data-table td.clickable-cell {
-    position: relative;
-}
-
-/* Tooltip text */
-.data-table td.clickable-cell:after {
-    content: "Click to copy";
+/* New tooltip implementation */
+.data-table td.clickable-cell .tooltip {
     visibility: hidden;
-    width: auto;
+    width: max-content;
     background-color: rgba(0, 0, 0, 0.85);
-    color: #fff;
+    color: white;
     text-align: center;
     padding: 5px 10px;
     border-radius: 4px;
     position: absolute;
-    z-index: 100;
+    z-index: 200;
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
     transition: opacity 0.3s;
-    white-space: nowrap;
     font-size: 0.75rem;
-    pointer-events: none;
 }
 
 /* Tooltip arrow */
-.data-table td.clickable-cell:before {
+.data-table td.clickable-cell .tooltip::after {
     content: "";
     position: absolute;
-    top: -38%;
+    top: 100%;
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+}
+
+/* Show the tooltip when hovering over the cell */
+.data-table td.clickable-cell:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Success tooltip */
+.data-table td.clickable-cell .success-tooltip {
+    background-color: var(--success-color, #4CAF50);
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 101;
 }
 
-/* Show the tooltip on hover */
-.data-table td.clickable-cell:hover:after,
-.data-table td.clickable-cell:hover:before {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Success state */
-.data-table td.copy-success:after {
-    content: "Copied!";
-    background-color: var(--success-color, #4CAF50);
-    visibility: visible;
-    opacity: 1;
-}
-
-.data-table td.copy-success:before {
+.data-table td.clickable-cell .success-tooltip::after {
     border-color: var(--success-color, #4CAF50) transparent transparent transparent;
+}
+
+/* Show success tooltip when copied */
+.data-table td.copy-success .success-tooltip {
     visibility: visible;
     opacity: 1;
+}
+
+.data-table td.copy-success .tooltip {
+    visibility: hidden;
+    opacity: 0;
 }
 
 /* Sortable headers */

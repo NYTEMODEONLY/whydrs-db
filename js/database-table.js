@@ -296,6 +296,19 @@ function renderTable() {
             if ((column === 'IR_Emails' || column === 'IR_Phone_Number') && item[column]) {
                 cell.className = 'clickable-cell';
                 cell.setAttribute('data-copy', item[column]);
+                
+                // Add tooltip elements
+                const tooltip = document.createElement('span');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = 'Click to copy';
+                
+                const successTooltip = document.createElement('span');
+                successTooltip.className = 'tooltip success-tooltip';
+                successTooltip.textContent = 'Copied!';
+                
+                cell.appendChild(tooltip);
+                cell.appendChild(successTooltip);
+                
                 cell.addEventListener('click', handleCellClick);
             }
             
