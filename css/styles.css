@@ -454,8 +454,11 @@ button:focus, input:focus, a:focus {
 .container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-md);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+    box-sizing: border-box;
 }
 
 .button {
@@ -657,11 +660,18 @@ nav ul li a:focus::after {
     text-align: center;
     padding: var(--spacing-lg) 0 var(--spacing-xl);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hero .container {
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hero h1 {
@@ -683,6 +693,7 @@ nav ul li a:focus::after {
     position: relative;
     max-width: 900px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .hero .subtitle {
@@ -690,6 +701,8 @@ nav ul li a:focus::after {
     font-weight: 400;
     margin-bottom: 1rem;
     max-width: 800px;
+    width: 100%;
+    text-align: center;
 }
 
 .hero-explainer {
@@ -698,6 +711,8 @@ nav ul li a:focus::after {
     border-radius: 1rem;
     margin-bottom: 1rem;
     max-width: 700px;
+    width: 100%;
+    text-align: center;
 }
 
 .hero-explainer p {
@@ -716,6 +731,8 @@ nav ul li a:focus::after {
     margin: 0.8rem 0;
     width: 100%;
     max-width: 700px;
+    display: flex;
+    justify-content: center;
 }
 
 .quick-search form {
@@ -758,6 +775,8 @@ nav ul li a:focus::after {
     margin-bottom: var(--spacing-sm);
     margin-top: var(--spacing-sm);
     justify-content: center;
+    width: 100%;
+    max-width: 700px;
 }
 
 /* CTA Buttons */
@@ -766,7 +785,10 @@ nav ul li a:focus::after {
     gap: var(--spacing-sm);
     flex-wrap: wrap;
     margin-bottom: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
     justify-content: center;
+    width: 100%;
+    max-width: 700px;
 }
 
 .cta-buttons .button {
@@ -825,6 +847,8 @@ nav ul li a:focus::after {
     margin-top: 0.6rem;
     justify-content: center;
     margin-bottom: 1rem;
+    width: 100%;
+    max-width: 700px;
 }
 
 .stat {
@@ -887,16 +911,20 @@ nav ul li a:focus::after {
 /* Scroll indicator styles */
 .scroll-indicator {
     position: absolute;
-    bottom: 15px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    opacity: 0.9;
-    z-index: 20;
+    gap: 8px;
     color: var(--text-light);
-    background-color: transparent;
-    padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    animation: bounce 2s infinite, fadeInUp 1s 1.2s both;
+    font-size: 0.85rem;
 }
 
 .scroll-indicator svg {
