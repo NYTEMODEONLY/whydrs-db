@@ -188,21 +188,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize autocomplete functionality
 function initializeAutocomplete(inputElement, type) {
-    // Create backdrop element
+    // Create backdrop element that covers the entire page
     const backdrop = document.createElement('div');
     backdrop.className = 'autocomplete-backdrop';
     document.body.appendChild(backdrop);
     
-    // Create autocomplete container
+    // Create autocomplete container - append it to body instead of the form
+    // This places it at the root level of the DOM, avoiding stacking context issues
     const autocompleteContainer = document.createElement('div');
     autocompleteContainer.className = 'autocomplete-container';
-    
-    // Properly position the autocomplete container
-    const parentForm = inputElement.closest('form');
-    parentForm.style.position = 'relative';
-    
-    // Append the container to the form
-    parentForm.appendChild(autocompleteContainer);
+    document.body.appendChild(autocompleteContainer);
     
     // Store reference based on type
     if (type === 'hero') {
@@ -226,8 +221,7 @@ function initializeAutocomplete(inputElement, type) {
         
         // Hide if query is empty
         if (!query || !databaseData.length) {
-            autocompleteContainer.style.display = 'none';
-            backdrop.style.display = 'none';
+            hideAutocomplete();
             return;
         }
         
@@ -240,21 +234,20 @@ function initializeAutocomplete(inputElement, type) {
         
         // If no suggestions, hide container
         if (suggestions.length === 0) {
-            autocompleteContainer.style.display = 'none';
-            backdrop.style.display = 'none';
+            hideAutocomplete();
             return;
         }
         
-        // Calculate position to ensure it's below the input
+        // Calculate position to place the dropdown below the input
         const inputRect = inputElement.getBoundingClientRect();
-        autocompleteContainer.style.minWidth = inputRect.width + 'px';
+        autocompleteContainer.style.position = 'fixed';  // Use fixed positioning
+        autocompleteContainer.style.width = `${inputRect.width}px`;
+        autocompleteContainer.style.top = `${inputRect.bottom}px`;
+        autocompleteContainer.style.left = `${inputRect.left}px`;
         
         // Show backdrop and container
         backdrop.style.display = 'block';
         autocompleteContainer.style.display = 'block';
-        
-        // Force repaint to ensure proper rendering
-        autocompleteContainer.offsetHeight;
         
         // Create suggestion items
         suggestions.forEach((company, index) => {
@@ -275,8 +268,7 @@ function initializeAutocomplete(inputElement, type) {
                 e.stopPropagation();
                 
                 inputElement.value = tickerDisplay || companyDisplay;
-                autocompleteContainer.style.display = 'none';
-                backdrop.style.display = 'none';
+                hideAutocomplete();
                 inputElement.focus(); // Keep focus on the input
                 
                 // If it's hero search, sync with main search
@@ -358,9 +350,7 @@ function initializeAutocomplete(inputElement, type) {
         } 
         // Escape key
         else if (e.key === 'Escape') {
-            autocompleteContainer.style.display = 'none';
-            backdrop.style.display = 'none';
-            currentFocus = -1;
+            hideAutocomplete();
         }
     });
     
@@ -380,6 +370,13 @@ function initializeAutocomplete(inputElement, type) {
         currentFocus = index;
     }
     
+    // Helper function to hide autocomplete
+    function hideAutocomplete() {
+        autocompleteContainer.style.display = 'none';
+        backdrop.style.display = 'none';
+        currentFocus = -1;
+    }
+    
     // Focus event to show suggestions if input has content
     inputElement.addEventListener('focus', function() {
         const query = this.value.trim();
@@ -391,17 +388,34 @@ function initializeAutocomplete(inputElement, type) {
     
     // Click on backdrop should close the autocomplete
     backdrop.addEventListener('click', function() {
-        autocompleteContainer.style.display = 'none';
-        backdrop.style.display = 'none';
-        currentFocus = -1;
+        hideAutocomplete();
     });
     
-    // Update document click handler for this specific autocomplete
+    // Handle window resize to reposition dropdown
+    window.addEventListener('resize', function() {
+        if (autocompleteContainer.style.display === 'block') {
+            const inputRect = inputElement.getBoundingClientRect();
+            autocompleteContainer.style.width = `${inputRect.width}px`;
+            autocompleteContainer.style.top = `${inputRect.bottom}px`;
+            autocompleteContainer.style.left = `${inputRect.left}px`;
+        }
+    });
+    
+    // Handle scroll to reposition dropdown
+    window.addEventListener('scroll', function() {
+        if (autocompleteContainer.style.display === 'block') {
+            const inputRect = inputElement.getBoundingClientRect();
+            autocompleteContainer.style.top = `${inputRect.bottom}px`;
+            autocompleteContainer.style.left = `${inputRect.left}px`;
+        }
+    });
+    
+    // Global document click handler to close dropdown
     document.addEventListener('click', function(event) {
-        // If click is outside autocomplete and not on the input
-        if (!autocompleteContainer.contains(event.target) && event.target !== inputElement) {
-            autocompleteContainer.style.display = 'none';
-            backdrop.style.display = 'none';
+        if (event.target !== inputElement && 
+            !autocompleteContainer.contains(event.target) && 
+            event.target !== backdrop) {
+            hideAutocomplete();
         }
     });
 }

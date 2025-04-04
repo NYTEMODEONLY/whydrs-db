@@ -1596,7 +1596,7 @@ nav ul li a:focus::after {
 /* Autocomplete styles */
 .autocomplete-container {
     position: absolute;
-    z-index: 9999;
+    z-index: 999999;
     max-height: 300px;
     overflow-y: auto;
     width: 100%;
@@ -1621,7 +1621,7 @@ nav ul li a:focus::after {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9990;
+    z-index: 999990;
     background-color: rgba(0, 0, 0, 0.1);
     display: none;
 }
