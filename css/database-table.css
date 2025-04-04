@@ -389,6 +389,153 @@
         padding: 0.6rem 0.5rem;
         font-size: 0.85rem;
     }
+    
+    /* Improved mobile table styling */
+    .data-table {
+        min-width: 600px; /* Allow horizontal scrolling while keeping columns visible */
+    }
+    
+    .copyable-cell:hover::after {
+        bottom: -30px; /* Push tooltip further down on mobile */
+        white-space: nowrap;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .copy-success::after {
+        bottom: -30px;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    /* Better mobile touch targets */
+    .data-table td.copyable-cell {
+        padding: 0.8rem 0.5rem; /* Increase touch target size */
+    }
+    
+    /* Enhanced column headers */
+    .data-table th {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .sort-icon {
+        right: 0.3rem;
+    }
+    
+    /* Better column distribution on smaller screens */
+    .data-table th[data-column="Ticker"],
+    .data-table td:nth-child(1) {
+        width: 12%;
+    }
+    
+    .data-table th[data-column="Exchange"],
+    .data-table td:nth-child(2) {
+        width: 13%;
+    }
+    
+    .data-table th[data-column="Company_Name_Issuer"],
+    .data-table td:nth-child(3) {
+        width: 25%;
+    }
+    
+    .data-table th[data-column="Transfer_Agent"],
+    .data-table td:nth-child(4) {
+        width: 25%;
+    }
+    
+    .data-table th[data-column="IR_Emails"],
+    .data-table td:nth-child(5) {
+        width: 15%;
+    }
+    
+    .data-table th[data-column="IR_Phone_Number"],
+    .data-table td:nth-child(6) {
+        width: 10%;
+    }
+    
+    /* Mobile optimized database header */
+    .database-header {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .database-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .database-subtitle {
+        font-size: 0.85rem;
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .database-controls {
+        padding: var(--spacing-xs) 0;
+    }
+    
+    .controls-wrapper {
+        padding: 0 var(--spacing-xs);
+    }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 480px) {
+    /* Button and control optimization for small screens */
+    .column-controls {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    #select-columns,
+    #reset-columns {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    #table-search {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .pagination-controls {
+        gap: 0.5rem;
+    }
+    
+    #prev-page,
+    #next-page {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.8rem;
+    }
+    
+    #page-indicator {
+        font-size: 0.8rem;
+    }
+    
+    /* Modal optimizations */
+    .modal-content {
+        padding: var(--spacing-sm);
+        width: 95%;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    
+    .column-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .column-option {
+        font-size: 0.9rem;
+    }
+    
+    /* Tooltip adjustments */
+    .copyable-cell:hover::after,
+    .copy-success::after {
+        left: auto;
+        right: 0;
+        transform: none;
+    }
 }
 
 /* Empty Cell Styling */
